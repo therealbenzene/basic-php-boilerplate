@@ -1,2 +1,2 @@
-# PHP (composer based autoloader) MVC Boilerplate
+# PHP MVC Boilerplate (composer based autoloader)
 ### basic-php-boilerplate
