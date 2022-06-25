@@ -1,0 +1,91 @@
+//theme colors
+$primary: #e5e4e2;
+$secondary: #e97451;
+$tertiary: #6d6d6d;
+// $quaternary: #FF0000;
+$button: #add8e6;
+
+//font family
+$ff-primary: sans-serif;
+$ff-secondary: monospace;
+
+//font weight
+$fw-reg: 300;
+$fw-bold: 800;
+
+//styling for front page
+
+body {
+  background-color: $primary;
+
+  header {
+    background-color: $secondary;
+    bottom: 0;
+    width: 100%;
+    height: 3rem;
+    text-align: center;
+    color:$tertiary;
+  }
+
+  h3 {
+    font-family: $ff-primary;
+    color: $tertiary;
+    margin: 12px 50px 25px 0;
+  }
+
+  .delete-checkbox {
+    box-shadow: inset 0 0 6px $secondary;
+  }
+
+  footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    color: white;
+    text-align: left;
+    background-color: $secondary;
+
+    h4 {
+      margin: 12px;
+      color: $tertiary;
+    }
+  }
+}
+
+//styling of buttons
+
+.save {
+  background-color: $button;
+  box-shadow: inset 0 0 10px $secondary;
+  font-family: $ff-primary;
+  font-weight: $fw-bold;
+}
+
+.cancel {
+  box-shadow: inset 0 0 20px $secondary;
+  font-family: $ff-primary;
+  font-weight: $fw-bold;
+}
+
+.add {
+  background-color: $button;
+  box-shadow: inset 0 0 10px $secondary;
+  font-family: $ff-primary;
+  font-weight: $fw-bold;
+}
+
+#delete-product-btn {
+  box-shadow: inset 0 0 20px $secondary;
+  font-family: $ff-primary;
+  font-weight: $fw-bold;
+}
+
+//for type switch in add page
+div.inputbox {
+  display: none;
+}
+
+.form-label{
+    margin-bottom: 1px;
+}
