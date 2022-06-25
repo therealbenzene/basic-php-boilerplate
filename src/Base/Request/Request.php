@@ -19,14 +19,29 @@ class Request implements IRequest
         }
     }
 
+    // taking whatever name and making it [eg: serverName]
     private function toCamelCase($string)
     {
+        /**
+         * eg:
+         *  SERVER_NAME => server_name
+         *  SERVER_NAME_COUNT => server_name_count
+         ***/
         $result = strtolower($string);
 
+        /** 
+         * eg:
+         *  server_name => [_n]
+         *  server_name_count => [_n,_c]
+         ***/
         preg_match_all('/_[a-z]/', $result, $matches);
 
+        // loop 
         foreach ($matches[0] as $match) {
+            // _n => N
             $c = str_replace('_', '', strtoupper($match));
+
+            // search(_n), repalce(N), in(server_name) => serverName
             $result = str_replace($match, $c, $result);
         }
 

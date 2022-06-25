@@ -14,11 +14,6 @@
 
     <h2>Add Products</h2>
     <a href="/">go back home</a>
-    <ul>
-        <?php foreach ($this->getProducts() as $product) : ?>
-            <li><?php echo $product->getName() ?></li>
-        <?php endforeach; ?>
-    </ul>
 </body>
 
 </html>
