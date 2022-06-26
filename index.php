@@ -2,26 +2,28 @@
 
 require realpath("vendor/autoload.php");
 
-use App\Base\Request\Request;
 use App\Base\Route\Route;
 use App\Controller\ProductsController;
 
-$route = new Route();
-
-// route to main page
-$route->get('/', function ($request) {
+Route::get('/', function ($request) {
 
     return (new ProductsController($request))->get_front();
 });
 
 // route to add product page
-$route->get('/add-product', function ($request) {
+Route::get('/add-product', function ($request) {
 
     return (new ProductsController($request))->get_add_product();
 });
 
+// route to get-someother page
+Route::get('/get-someother', function ($request) {
+
+    return (new ProductsController($request))->get_some_other();
+});
+
 // route to delete products 
-$route->post('/', function (Request $request) {
+Route::post('/', function ($request) {
 
     $controller = new ProductsController($request);
 
@@ -32,7 +34,7 @@ $route->post('/', function (Request $request) {
 });
 
 // route to store product
-$route->post('/', function (Request $request) {
+Route::post('/', function ($request) {
 
     return (new ProductsController($request))->store();
 });

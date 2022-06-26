@@ -10,7 +10,7 @@ use App\Model\Products;
 
 class ProductsController
 {
-    private Request $request;
+    private $request;
     private $errorMessage = "";
 
     function __construct(Request $request)
@@ -21,12 +21,22 @@ class ProductsController
     public function get_front()
     {
         $result = (new Products())->selectAll();
-        return $this->render('front', ['result' => $result]);
+        return $this->render('front', [
+            'result' => $result,
+            'title'  => 'Home Grown variable'
+        ]);
+    }
+
+    public function get_some_other()
+    {
+        return $this->render('pages/sub-page-1', [
+            'title'  => 'Some Other Page'
+        ]);
     }
 
     public function get_add_product()
     {
-        return $this->render('add_products');
+        return $this->render('add-products');
     }
 
     public function store()

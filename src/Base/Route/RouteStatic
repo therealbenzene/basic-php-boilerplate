@@ -1,0 +1,87 @@
+namespace App\Base\Route;
+
+use App\Base\Request\Request;
+
+class Route
+{
+private static $request;
+private static $routes;
+private static $supportedHttpMethods = array(
+"GET",
+"POST"
+);
+
+static function __callStatic($name, $args)
+{
+self::$request = new Request();
+
+// $_routes = [
+// 'get' => [
+// '/' => 'method',
+// '/app' => 'method2',
+// '/app/users' => 'method3',
+// ]
+// ];
+
+list($route, $method) = $args;
+
+if (!in_array(strtoupper($name), self::$supportedHttpMethods)) {
+self::invalidMethodHandler();
+}
+
+// $this->get['/'] = function(){};
+// $this->{strtolower($name)}[$this->formatRoute($route)] = $method;
+// $callback[self::formatRoute($route)] = $method;
+
+self::$routes[strtolower($name)] = [self::formatRoute($route) => $method];
+self::resolve();
+}
+
+/**
+* Removes trailing forward slashes from the right of the route.
+* @param route (string)
+*/
+private static function formatRoute($route)
+{
+$result = rtrim($route, '/');
+if ($result === '') {
+return '/';
+}
+return $result;
+}
+
+private static function invalidMethodHandler()
+{
+$serverProtocol = self::$request->serverProtocol;
+header("{$serverProtocol} 405 Method Not Allowed");
+}
+
+private static function defaultRequestHandler()
+{
+$serverProtocol = self::$request->serverProtocol;
+header("{$serverProtocol} 404 Not Found");
+}
+
+/**
+* Resolves a route
+*/
+private static function resolve()
+{
+// = [self::formatRoute($route) => $method];
+$methodDictionary = self::$routes[strtolower(self::$request->requestMethod)];
+$formatedRoute = self::formatRoute(self::$request->requestUri);
+
+if (!isset($methodDictionary[$formatedRoute])) return;
+
+$method = $methodDictionary[$formatedRoute];
+echo $method;
+
+if (is_null($method)) {
+self::defaultRequestHandler();
+return;
+}
+
+echo call_user_func_array($method, array(new Request()));
+exit;
+}
+}

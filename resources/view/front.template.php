@@ -9,11 +9,13 @@
 </head>
 
 <body>
-    <h2>Home</h2>
-    <a href="/add-product">add products</a>
+    <h2><?= $this->title ?></h2>
+    <ul>
+        <li><a href="/add-product">add products</a></li>
+    </ul>
     <ul>
         <?php foreach ($this->result as $product) : ?>
-            <li><?php echo $product->getName() ?></li>
+            <li><?= $product->getName() ?></li>
         <?php endforeach; ?>
     </ul>
 </body>

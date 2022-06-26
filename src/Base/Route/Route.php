@@ -6,33 +6,32 @@ use App\Base\Request\Request;
 
 class Route
 {
-    private $request;
-    private $supportedHttpMethods = array(
+    private static $request;
+    private static $routes;
+    private static $supportedHttpMethods = array(
         "GET",
         "POST"
     );
 
-    function __construct()
+    static function __callStatic($name, $args)
     {
-        $this->request = new Request();
-    }
+        self::$request = new Request();
 
-    function __call($name, $args)
-    {
         list($route, $method) = $args;
 
-        if (!in_array(strtoupper($name), $this->supportedHttpMethods)) {
-            $this->invalidMethodHandler();
+        if (!in_array(strtoupper($name), self::$supportedHttpMethods)) {
+            self::invalidMethodHandler();
         }
 
-        $this->{strtolower($name)}[$this->formatRoute($route)] = $method;
+        self::$routes[strtolower($name)] = [self::formatRoute($route) => $method];
+        self::resolve();
     }
 
     /**
      * Removes trailing forward slashes from the right of the route.
      * @param route (string)
      */
-    private function formatRoute($route)
+    private static function formatRoute($route)
     {
         $result = rtrim($route, '/');
         if ($result === '') {
@@ -41,35 +40,47 @@ class Route
         return $result;
     }
 
-    private function invalidMethodHandler()
+    private static function invalidMethodHandler()
     {
-        header("{$this->request->serverProtocol} 405 Method Not Allowed");
+        $serverProtocol = self::$request->serverProtocol;
+        header("{$serverProtocol} 405 Method Not Allowed");
     }
 
-    private function defaultRequestHandler()
+    private static function resourceNotFoundHandler()
     {
-        header("{$this->request->serverProtocol} 404 Not Found");
+        $serverProtocol = self::$request->serverProtocol;
+        header("{$serverProtocol} 404 Not Found");
+    }
+
+    private static function resourceOKHandler()
+    {
+        $serverProtocol = self::$request->serverProtocol;
+        header("{$serverProtocol} 200 OK");
     }
 
     /**
      * Resolves a route
      */
-    function resolve()
+    private static function resolve()
     {
-        $methodDictionary = $this->{strtolower($this->request->requestMethod)};
-        $formatedRoute = $this->formatRoute($this->request->requestUri);
-        $method = $methodDictionary[$formatedRoute];
+        $methodDictionary = self::$routes[strtolower(self::$request->requestMethod)];
+        $formatedRoute = self::formatRoute(self::$request->requestUri);
 
-        if (is_null($method)) {
-            $this->defaultRequestHandler();
+        self::resourceOKHandler();
+
+        if (!isset($methodDictionary[$formatedRoute])) {
+            self::resourceNotFoundHandler();
             return;
         }
 
-        echo call_user_func_array($method, array($this->request));
-    }
+        $method = $methodDictionary[$formatedRoute];
 
-    function __destruct()
-    {
-        $this->resolve();
+        if (is_null($method)) {
+            self::resourceNotFoundHandler();
+            return;
+        }
+
+        echo call_user_func_array($method, array(new Request()));
+        exit;
     }
 }
